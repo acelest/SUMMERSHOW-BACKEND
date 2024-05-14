@@ -6,6 +6,11 @@ class DisciplineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discipline
         fields = ['id', 'name', 'description', 'slug']
+        
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vote
+        fields = '__all__'
 
 class CandidatSerializer(serializers.ModelSerializer):
     discipline = DisciplineSerializer()  
