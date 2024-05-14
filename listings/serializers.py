@@ -13,6 +13,10 @@ class CandidatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidat
         fields = ['id', 'name', 'identifier', 'discipline', 'photo', 'slug']
+class CandidatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Candidat
+        fields = ['id', 'name', 'identifier', 'photo', 'slug']
 
 class VoteSerializer(serializers.ModelSerializer):
     candidate = CandidatSerializer()  
