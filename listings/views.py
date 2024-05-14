@@ -2,7 +2,9 @@
 from rest_framework import viewsets
 from .models import Discipline, Candidat, Vote
 from .serializers import DisciplineSerializer, CandidatSerializer, VoteSerializer
+from .serializers import CandidatSerializer
 from rest_framework import permissions
+from rest_framework import generics
 
 class NoDeletePermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -22,6 +24,14 @@ class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializer
     permission_classes = [NoDeletePermission]
+class CandidatListAPIView(generics.ListAPIView):
+    serializer_class = CandidatSerializer
+
+    def get_queryset(self):
+        discipline_slug = self.kwargs['discipline_slug']
+        return Candidat.objects.filter(discipline__slug=discipline_slug)
+   
+
 
     # en attendant les payements
     def update(self, request, *args, **kwargs):
