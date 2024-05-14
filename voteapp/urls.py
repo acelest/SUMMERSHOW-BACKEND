@@ -26,8 +26,6 @@ urlpatterns = [
     path('api/',include('listings.urls')),
     path('documentation<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('documentation/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-        path('api/candidats/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='candidats-list'),
-        path('api/candidat/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='schema-json'),
 
 ]
 
