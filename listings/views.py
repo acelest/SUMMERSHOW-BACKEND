@@ -5,6 +5,9 @@ from .serializers import DisciplineSerializer, CandidatSerializer, VoteSerialize
 from .serializers import CandidatSerializer
 from rest_framework import permissions
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 class NoDeletePermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -31,7 +34,16 @@ class CandidatListAPIView(generics.ListAPIView):
         discipline_slug = self.kwargs['discipline_slug']
         return Candidat.objects.filter(discipline__slug=discipline_slug)
    
-
+class CandidatVotesAPIView(APIView):
+    def get(self, request, id):
+        try:
+            identifiant = Candidat.objects.get(id=id)
+            # candidat = Candidat.objects.get(name=candidat_name)
+            votes = Vote.objects.filter(candidate=identifiant)
+            serializer = VoteSerializer(votes, many=True)
+            return Response(serializer.data)
+        except Candidat.DoesNotExist:
+            return Response({'message': 'Candidat not found'}, status=status.HTTP_404_NOT_FOUND)
 
     # en attendant les payements
     def update(self, request, *args, **kwargs):
