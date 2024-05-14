@@ -5,6 +5,8 @@ from django.conf.urls.static import static
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from listings.views import CandidatListAPIView
+
 schema_view = get_schema_view(
    openapi.Info(
       title="The summer show",
@@ -24,6 +26,9 @@ urlpatterns = [
     path('api/',include('listings.urls')),
     path('documentation<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('documentation/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+        path('api/candidats/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='candidats-list'),
+        path('api/candidat/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='schema-json'),
+
 ]
 
 
