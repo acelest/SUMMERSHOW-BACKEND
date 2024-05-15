@@ -10,6 +10,6 @@ router.register(r'votes', VoteViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('api/candidat/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='candidats-list'),
+    path('candidat/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='candidats-list'),
     path('candidats/<str:id>/votes/', CandidatVotesAPIView.as_view(), name='candidat_votes'),
 ]
