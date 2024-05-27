@@ -14,8 +14,7 @@ SECRET_KEY = 'django-insecure-i8_h#fo^&!dbad&h89_*k%i*5pk06-62b(7^xncvk2z_o@l52_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:3000"
-]
+ALLOWED_HOSTS = ["*"]
 
 
 JAZZMIN_SETTINGS = {
@@ -33,7 +32,6 @@ JAZZMIN_SETTINGS = {
 
 INSTALLED_APPS = [
     'jazzmin',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +48,6 @@ ADMIN_SITE_HEADER = "TheSummerShow"
 
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
