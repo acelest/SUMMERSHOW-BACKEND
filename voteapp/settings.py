@@ -14,23 +14,24 @@ SECRET_KEY = 'django-insecure-i8_h#fo^&!dbad&h89_*k%i*5pk06-62b(7^xncvk2z_o@l52_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*","http://localhost:3000"]
 
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "TheSummerShow",
+    "site_title": "TheSummer Show",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "TheSummerShow",
+    "site_header": "TheSummer Show",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "TheSummerShow",
+    "site_brand": "TheSummer Show",
     
 }
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,6 +49,7 @@ ADMIN_SITE_HEADER = "TheSummerShow"
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
