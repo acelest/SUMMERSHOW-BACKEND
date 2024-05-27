@@ -15,10 +15,10 @@ class NoDeletePermission(permissions.BasePermission):
         if request.method == "DELETE":
             return False
         return True
-class DisciplineViewSet(viewsets.ReadOnlyModelViewSet):
+
+class DisciplineViewSet(viewsets.ModelViewSet):
     queryset = Discipline.objects.all()
     serializer_class = DisciplineSerializer
-
 class CandidatViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Candidat.objects.all()
     serializer_class = CandidatSerializer

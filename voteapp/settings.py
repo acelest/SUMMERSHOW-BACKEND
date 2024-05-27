@@ -4,7 +4,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -14,20 +13,14 @@ SECRET_KEY = 'django-insecure-i8_h#fo^&!dbad&h89_*k%i*5pk06-62b(7^xncvk2z_o@l52_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*","http://localhost:3000"]
-
+ALLOWED_HOSTS = ["*"]
 
 JAZZMIN_SETTINGS = {
-    # title of the window (Will default to current_admin_site.site_title if absent or None)
     "site_title": "TheSummer Show",
-
-    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_header": "TheSummer Show",
-
-    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_brand": "TheSummer Show",
-    
 }
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,11 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'listings',
     "rest_framework",
-    
 ]
 
 ADMIN_SITE_HEADER = "TheSummerShow"
-
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -80,7 +71,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'voteapp.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -90,7 +80,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -113,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -126,7 +114,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -136,3 +123,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = True
+
+# For a more restrictive setting, use:
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://127.0.0.1:3000",
+# ]
