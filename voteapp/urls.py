@@ -6,9 +6,6 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from listings.views import CandidatListAPIView
-from payments import views
-
-
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -27,9 +24,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('listings.urls')),
-    path('confirm-payment/', views.confirm_payment, name='confirm_payment'),
-    path('payments/verify/<str:reference>/', views.verify_payment, name='verify_payment'),
-    path('payments/complete/<str:reference>/', views.complete_payment, name='complete_payment'),
+    path('paiement/', include('paiements.urls')),
+
     path('documentation<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('documentation/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
