@@ -1,6 +1,17 @@
 import os
 from pathlib import Path
 
+# settings.py
+
+import os
+from env import load_dotenv 
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
+
+# Configuration de la clé API
+API_PAYMENT_KEY = os.getenv("API_PAYMENT_KEY")
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +37,7 @@ JAZZMIN_SETTINGS = {
 INSTALLED_APPS = [
     'corsheaders',
     'jazzmin',
+    'payments'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -52,3 +52,10 @@ class CandidatVotesAPIView(APIView):
         instance.payment_confirmed = payment_confirmed
         instance.save()
         return super().update(request, *args, **kwargs)
+
+class PaymentAPIView(APIView):
+    def get(self, request):
+        # Votre logique pour gérer les paiements
+        # Par exemple, récupérer les détails du paiement, traiter le paiement, etc.
+        # Cette méthode peut retourner un objet Response contenant les détails du paiement ou un message de succès
+        return Response({'message': 'Payment API endpoint'})
