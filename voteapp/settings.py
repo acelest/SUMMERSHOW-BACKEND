@@ -4,9 +4,9 @@ from pathlib import Path
 # settings.py
 
 import os
-from env import load_dotenv 
+from dotenv import load_dotenv
 
-# Charger les variables d'environnement depuis le fichier .env
+# Charger les variables d'environnement à partir du fichier .env
 load_dotenv()
 
 # Configuration de la clé API
