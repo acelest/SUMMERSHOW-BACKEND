@@ -37,7 +37,7 @@ JAZZMIN_SETTINGS = {
 INSTALLED_APPS = [
     'corsheaders',
     'jazzmin',
-    'payments'
+    # 'payments'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
