@@ -1,4 +1,3 @@
-# serializers.py
 from rest_framework import serializers
 from .models import Discipline, Candidat, Vote
 
@@ -17,26 +16,28 @@ class VoteSerializer(serializers.ModelSerializer):
         model = Vote
         fields = '__all__'
 
-class CandidatSerializer(serializers.ModelSerializer):
+class CandidatWithDisciplineSerializer(serializers.ModelSerializer):
     discipline = DisciplineSerializer()  
 
     class Meta:
         model = Candidat
         fields = ['id', 'name', 'identifier', 'discipline', 'photo', 'slug']
-class CandidatSerializer(serializers.ModelSerializer):
+
+class CandidatWithoutDisciplineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Candidat
         fields = ['id', 'name', 'identifier', 'photo', 'slug']
 
-class VoteSerializer(serializers.ModelSerializer):
-    candidate = CandidatSerializer()  
+# class Vote(models.Model):
+#     candidate = models.ForeignKey(Candidat, on_delete=models.CASCADE)
+#     user_id = models.CharField(max_length=200, blank=True)
+#     payment_confirmed = models.BooleanField(default=False)
+#     amount = models.PositiveIntegerField(default=100)  # Montant payé
+#     transaction_reference = models.CharField(max_length=255, blank=True, null=True)
 
-    class Meta:
-        model = Vote
-        fields = ['id', 'candidate', 'user_id', 'payment_confirmed']
+#     def __str__(self):
+#         return f"Vote for {self.candidate.name}"
 
-   
-    def update(self, instance, validated_data):
-        instance.payment_confirmed = validated_data.get('payment_confirmed', instance.payment_confirmed)
-        instance.save()
-        return instance
+#     class Meta:
+#         ordering = ['-id']
+#         verbose_name_plural = "Votes"
