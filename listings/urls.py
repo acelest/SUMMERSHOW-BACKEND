@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CandidatVotesAPIView, DisciplineViewSet, CandidatViewSet, VoteViewSet,InitiatePaymentAPIView, VerifyPaymentAPIView
+from .views import CandidatVotesAPIView, DisciplineViewSet, CandidatViewSet, VoteViewSet, InitiatePaymentAPIView, VerifyPaymentAPIView
 from .views import CandidatListAPIView
 
 router = DefaultRouter()
