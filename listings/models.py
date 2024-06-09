@@ -1,10 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 import random
-import string
-
-def generate_random_string(size):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=size))
+from string import ascii_letters
 
 class Discipline(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -32,15 +29,15 @@ class Discipline(models.Model):
 
 
 class Candidat(models.Model):
-    name = models.CharField(max_length=200)
     id = models.AutoField(primary_key=True)
     identifier = models.CharField(unique=True, null=True, blank=True, max_length=255)
+    name = models.CharField(max_length=200)
     discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='candidates_photos/')
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.pk:  # Only generate identifier if object is being created
+        if not self.pk:
             self.identifier = generate_random_string(32)
         if not self.slug:
             self.slug = slugify(f"{self.name}-{self.identifier}")
@@ -52,13 +49,10 @@ class Candidat(models.Model):
     class Meta:
         ordering = ['identifier']
 
-
 class Vote(models.Model):
     candidate = models.ForeignKey(Candidat, on_delete=models.CASCADE)
     user_id = models.CharField(max_length=200, blank=True)
     payment_confirmed = models.BooleanField(default=False)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Ajouter le champ amount
-    transaction_reference = models.CharField(max_length=100, blank=True, null=True)  # Ajouter le champ transaction_reference
 
     def __str__(self):
         return f"Vote for {self.candidate.name}"
@@ -66,3 +60,6 @@ class Vote(models.Model):
     class Meta:
         ordering = ['-id']
         verbose_name_plural = "Votes"
+
+def generate_random_string(length):
+    return ''.join(random.choice(ascii_letters) for _ in range(length))
