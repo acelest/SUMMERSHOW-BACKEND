@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\aubin\code\python\thesummershow-backend\env
+set VIRTUAL_ENV=C:\Users\bilim\Documents\backend\django\summershow-backend\env
 
 if not defined PROMPT set PROMPT=$P$G
 
