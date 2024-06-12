@@ -1,7 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import CandidatVotesAPIView, DisciplineViewSet, CandidatViewSet, VoteViewSet, InitiatePaymentAPIView, VerifyPaymentAPIView
-from .views import CandidatListAPIView
+from .views import CandidatVotesAPIView, DisciplineViewSet, CandidatViewSet, VoteViewSet, CandidatListAPIView, VerifyTransaction
 
 router = DefaultRouter()
 router.register(r'disciplines', DisciplineViewSet)
@@ -12,4 +11,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('candidat/<str:discipline_slug>/', CandidatListAPIView.as_view(), name='candidats-list'),
     path('candidats/<int:id>/votes/', CandidatVotesAPIView.as_view(), name='candidat_votes'),
+    path('api/verify-transaction/', VerifyTransaction.as_view(), name='verify_transaction'),
 ]

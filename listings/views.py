@@ -46,52 +46,31 @@ class CandidatVotesAPIView(APIView):
         serializer = VoteSerializer(votes, many=True)
         return Response(serializer.data)
 
-class InitiatePaymentAPIView(APIView):
+class VerifyTransaction(APIView):
     def post(self, request):
-        email = request.data.get('email')
-        amount = request.data.get('amount')
-        candidate_id = request.data.get('candidate_id')
+        # Récupérer la référence de transaction, la région et le montant depuis les données de la demande
+        transaction_reference = request.data.get('transaction_reference')
         region = request.data.get('region')
-        reference = generate_random_string(16)
-        callback_url = 'http://localhost:8000/api/verifyPayment'  # Remplacez par votre URL de callback
+        amount = request.data.get('amount')
 
-        headers = {
-            "Authorization": "pk_test.xQLVZVGz7ZD8nadSGdcHIB4gB5VLeZld1u3V7WsYZDw10aTuHh2AoFutOr4wOWxuqUT6UJzzLaztNdTnUzHTvpBcYcXHDvlpFekVmGZfogXr2f8u1ZLUlzO4X7zqA",  # Remplacez par votre clé publique NotchPay
-            "Content-Type": "application/json"
-        }
+        if not transaction_reference or not region or not amount:
+            return Response({"message": "La référence de transaction, la région ou le montant est manquant"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Adjust amount based on region
-        vote_price = 1000 if region == "Etranger" else 100
-        num_votes = int(amount) // vote_price
+        # Vérifier la validité de la transaction (à adapter selon vos besoins)
+        try:
+            vote = Vote.objects.get(transaction_reference=transaction_reference)
+        except Vote.DoesNotExist:
+            return Response({"message": "La transaction n'existe pas"}, status=status.HTTP_404_NOT_FOUND)
 
-        data = {
-            "email": email,
-            "amount": int(amount),  
-            "currency": "XAF",
-            "reference": reference,
-            "callback_url": callback_url,
-            "metadata": {
-                "candidate_id": candidate_id,
-                "numVotes": num_votes,
-                "region": region
-            }
-        }
+        # Calculer le nombre de votes en fonction du montant et de la région
+        if region == 'Cameroon':
+            price_per_vote = 100  # Prix par vote pour les résidents du Cameroun
+        else:
+            price_per_vote = 1000  # Prix par vote pour les étrangers
 
-        response = requests.post('https://api.notchpay.co/payments/initialize', json=data, headers=headers)
-        if response.status_code == 200:
-            payment_url = response.json().get('data').get('authorization_url')
-            return Response({'payment_url': payment_url})
-        return Response(response.json(), status=response.status_code)
+        num_votes = int(amount) // price_per_vote  # Calcul du nombre de votes
 
-class VerifyPaymentAPIView(APIView):
-    def get(self, request):
-        reference = request.query_params.get('reference')
-        status = request.query_params.get('status')
+        # Enregistrer les votes
+        vote.verify_and_record_vote(num_votes)
 
-        if status == 'success':
-            headers = {
-                "Authorization": "pk_test.xQLVZVGz7ZD8nadSGdcHIB4gB5VLeZld1u3V7WsYZDw10aTuHh2AoFutOr4wOWxuqUT6UJzzLaztNdTnUzHTvpBcYcXHDvlpFekVmGZfogXr2f8u1ZLUlzO4X7zqA",  # Remplacez par votre clé publique NotchPay
-            }
-            response = requests.get(f'https://api.notchpay.co/payments/verify/{reference}', headers=headers)
-            if response.status_code == 200 and response.json().get('status') == 'success':
-                metadata = response.json
+        return Response({"message": "La transaction a été confirmée avec succès et les votes ont été enregistrés"}, status=status.HTTP_200_OK)

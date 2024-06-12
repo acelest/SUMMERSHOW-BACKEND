@@ -1,8 +1,11 @@
+# Import des modules nécessaires
+import requests
 from django.db import models
 from django.utils.text import slugify
 import random
 from string import ascii_letters
 
+# Modèle Discipline
 class Discipline(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
@@ -27,7 +30,7 @@ class Discipline(models.Model):
         ordering = ['name']
         verbose_name_plural = "Disciplines"
 
-
+# Modèle Candidat
 class Candidat(models.Model):
     id = models.AutoField(primary_key=True)
     identifier = models.CharField(unique=True, null=True, blank=True, max_length=255)
@@ -49,6 +52,7 @@ class Candidat(models.Model):
     class Meta:
         ordering = ['identifier']
 
+# Modèle Vote
 class Vote(models.Model):
     candidate = models.ForeignKey(Candidat, on_delete=models.CASCADE)
     user_id = models.CharField(max_length=200, blank=True)
@@ -61,5 +65,24 @@ class Vote(models.Model):
         ordering = ['-id']
         verbose_name_plural = "Votes"
 
+    # Méthode pour vérifier et enregistrer un vote à partir de NotchPay
+    def verify_and_record_vote(self, transaction_reference):
+        # Endpoint de vérification dans votre backend
+        verification_endpoint = "http://127.0.0.1:8000/api/verify-transaction/"
+
+        # Requête POST pour vérifier la transaction avec la référence donnée
+        response = requests.post(verification_endpoint, data={"transaction_reference": transaction_reference})
+
+        # Vérification de la réponse du backend
+        if response.status_code == 200:
+            # Si la transaction est confirmée, enregistrez le vote
+            self.payment_confirmed = True
+            self.save()
+            return True
+        else:
+            # Sinon, la transaction a échoué ou n'est pas valide
+            return False
+
+# Fonction utilitaire pour générer une chaîne aléatoire
 def generate_random_string(length):
     return ''.join(random.choice(ascii_letters) for _ in range(length))
