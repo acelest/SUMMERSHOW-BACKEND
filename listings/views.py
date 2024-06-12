@@ -46,31 +46,47 @@ class CandidatVotesAPIView(APIView):
         serializer = VoteSerializer(votes, many=True)
         return Response(serializer.data)
 
+# class VerifyTransaction(APIView):
 class VerifyTransaction(APIView):
     def post(self, request):
-        # Récupérer la référence de transaction, la région et le montant depuis les données de la demande
-        transaction_reference = request.data.get('transaction_reference')
+        notchpay_reference = request.data.get('reference')
+        candidate_id = request.data.get('candidate_id')
         region = request.data.get('region')
         amount = request.data.get('amount')
 
-        if not transaction_reference or not region or not amount:
-            return Response({"message": "La référence de transaction, la région ou le montant est manquant"}, status=status.HTTP_400_BAD_REQUEST)
+        if not notchpay_reference or not candidate_id or not region or not amount:
+            return Response({"message": "La référence de transaction, la région, l'ID du candidat ou le montant est manquant"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Vérifier la validité de la transaction (à adapter selon vos besoins)
-        try:
-            vote = Vote.objects.get(transaction_reference=transaction_reference)
-        except Vote.DoesNotExist:
-            return Response({"message": "La transaction n'existe pas"}, status=status.HTTP_404_NOT_FOUND)
+        # Vérifier la transaction avec Notch Pay
+        url = f"https://api.notchpay.co/payments/verify/{notchpay_reference}"
+        headers = {
+            "Authorization": "Bearer YOUR_SECRET_KEY",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code != 200:
+            return Response({"message": "Erreur lors de la vérification de la transaction"}, status=status.HTTP_400_BAD_REQUEST)
+
+        transaction_data = response.json()
+        if transaction_data['status'] != 'success':
+            return Response({"message": "La transaction n'a pas été validée"}, status=status.HTTP_400_BAD_REQUEST)
 
         # Calculer le nombre de votes en fonction du montant et de la région
-        if region == 'Cameroon':
+        if region == 'cameroon':
             price_per_vote = 100  # Prix par vote pour les résidents du Cameroun
         else:
             price_per_vote = 1000  # Prix par vote pour les étrangers
 
-        num_votes = int(amount) // price_per_vote  # Calcul du nombre de votes
+        num_votes = int(amount) // price_per_vote
 
         # Enregistrer les votes
-        vote.verify_and_record_vote(num_votes)
+        Vote.objects.create(
+            candidate_id=candidate_id,
+            transaction_reference=notchpay_reference,
+            num_votes=num_votes,
+            verified=True
+        )
 
         return Response({"message": "La transaction a été confirmée avec succès et les votes ont été enregistrés"}, status=status.HTTP_200_OK)
