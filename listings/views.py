@@ -60,7 +60,7 @@ class VerifyTransaction(APIView):
         # Vérifier la transaction avec Notch Pay
         url = f"https://api.notchpay.co/payments/verify/{notchpay_reference}"
         headers = {
-            "Authorization": "Bearer YOUR_SECRET_KEY",
+            "Authorization": "Bearer pk_test.7drBXP9rbdN1GwBLY6G50jxwPqbKvn2CmWsvS0gbMqQn0VTGu4R3ouDjG6kmRbBD870e5XsCLdMe8xnhdCyFsnoHJem7B2rvDmrVmnOaYyC85j9eJpluAxv76fonR",
             "Content-Type": "application/json"
         }
 
