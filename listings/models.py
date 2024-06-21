@@ -7,6 +7,7 @@ from string import ascii_letters
 # Fonction utilitaire pour générer une chaîne aléatoire
 def generate_random_string(length):
     return ''.join(random.choice(ascii_letters) for _ in range(length))
+
 def generate_transaction_reference():
     return ''.join(random.choice(ascii_letters) for _ in range(10))
 
@@ -59,11 +60,11 @@ class Candidat(models.Model):
 
 # Modèle Vote
 class Vote(models.Model):
-    candidate = models.ForeignKey(Candidat, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Candidat, related_name='votes', on_delete=models.CASCADE)
     user_id = models.CharField(max_length=200, blank=True)
     payment_confirmed = models.BooleanField(default=False)
-    # transaction_reference = models.CharField(max_length=255, unique=True)
-    transaction_reference = models.CharField(max_length=20, default=generate_transaction_reference)  # Définir une valeur par défaut
+    transaction_reference = models.CharField(max_length=20, default=generate_transaction_reference)
+
     def __str__(self):
         return f"Vote for {self.candidate.name}"
 

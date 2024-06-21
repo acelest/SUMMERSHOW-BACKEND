@@ -1,7 +1,9 @@
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 from .models import Discipline, Candidat, Vote
 from .serializers import DisciplineSerializer, CandidatWithDisciplineSerializer, CandidatWithoutDisciplineSerializer, VoteSerializer
 import requests
@@ -46,7 +48,6 @@ class CandidatVotesAPIView(APIView):
         serializer = VoteSerializer(votes, many=True)
         return Response(serializer.data)
 
-# class VerifyTransaction(APIView):
 class VerifyTransaction(APIView):
     def post(self, request):
         notchpay_reference = request.data.get('reference')
@@ -90,3 +91,9 @@ class VerifyTransaction(APIView):
         )
 
         return Response({"message": "La transaction a été confirmée avec succès et les votes ont été enregistrés"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def votes_chart_data(request):
+    candidats = Candidat.objects.annotate(total_votes=Sum('votes__payment_confirmed')).order_by('-total_votes')[:10]
+    data = [{'name': candidat.name, 'votes': candidat.total_votes} for candidat in candidats]
+    return Response(data)
