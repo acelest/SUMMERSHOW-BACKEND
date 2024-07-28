@@ -1,4 +1,3 @@
-
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -19,37 +18,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i8_h#fo^&!dbad&h89_*k%i*5pk06-62b(7^xncvk2z_o@l52_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True  # Set to True for development, False for production
 
 ALLOWED_HOSTS = ["*"]
 
 JAZZMIN_SETTINGS = {
-    "site_title": "TheSummer Show",
+    "site_title": "ADMIN - TheSummer Show 2k24 ",
     "site_header": "TheSummer Show",
     "site_brand": "TheSummer Show",
 }
 
 # Application definition
 
+#AWS CONFIGURATION
 
-#aws configurations
+# AWS_ACCESS_KEY_ID = os.getenv('R2_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.getenv('R2_STORAGE_BUCKET_NAME')
+# AWS_S3_ENDPOINT_URL = 'https://a47b4fa647b5c8c98f04f720c123e23d.r2.cloudflarestorage.com'
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
 
+#Set S3 configurations for django-storages
 
-AWS_ACCESS_KEY_ID = os.getenv('R2_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('R2_STORAGE_BUCKET_NAME')
-AWS_S3_ENDPOINT_URL = 'https://a47b4fa647b5c8c98f04f720c123e23d.r2.cloudflarestorage.com'
-AWS_S3_SIGNATURE_VERSION = 's3v4'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# AWS_LOCATION = 'media'
 
+#Storage settings
 
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-# Set S3 configurations for django-storages
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_LOCATION = 'media'
-
-# Storage settings
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 INSTALLED_APPS = [
     'corsheaders',
@@ -62,13 +60,12 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django.contrib.staticfiles',
     'listings',
-    # 'paiements'
     "rest_framework",
     "gunicorn",
     "whitenoise"
 ]
 
-ADMIN_SITE_HEADER = "TheSummerShow"
+ADMIN_SITE_HEADER = "ADMIN - TheSummerShow"
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -131,42 +128,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Media files (uploads)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = 'static/'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-# LANGUAGE_CODE = 'en-us'
 LANGUAGE_CODE = 'fr-fr'
-
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_TZ = True
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 
 # For a more restrictive setting, use:
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
-
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
