@@ -5,15 +5,13 @@ from django.conf.urls.static import static
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-# from listings.views import CandidatListAPIView
-
 schema_view = get_schema_view(
    openapi.Info(
-      title="The Summer  Show",
+      title="THE SUMMER SHOW",
       default_version='v1',
-      description="TheSummer show documentation",
+      description="THE SUMMER SHOW DOCUMENTATION",
       terms_of_service="",
-      contact=openapi.Contact(email="thesummershow@site.com"),
+      contact=openapi.Contact(email="contact@thesummer-show2k24.com"),
       license=openapi.License(name=""),
 
    ),

@@ -1,4 +1,4 @@
-#!/home/acelest-dev/summershow-backend/venv/bin/python3
+#!/home/acelest-dev/Desktop/ACELEST DEV/projects/The Summer Show 2k24/summershow-backend/venv/bin/python3
 
 import sys
 import json
