@@ -48,6 +48,50 @@ class CandidatVotesAPIView(APIView):
         serializer = VoteSerializer(votes, many=True)
         return Response(serializer.data)
 
+# class VerifyTransaction(APIView):
+#     def post(self, request):
+#         notchpay_reference = request.data.get('reference')
+#         candidate_id = request.data.get('candidate_id')
+#         region = request.data.get('region')
+#         amount = request.data.get('amount')
+
+#         if not notchpay_reference or not candidate_id or not region or not amount:
+#             return Response({"message": "La référence de transaction, la région, l'ID du candidat ou le montant est manquant"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Vérifier la transaction avec Notch Pay
+#         url = f"https://api.notchpay.co/payments/verify/{notchpay_reference}"
+#         headers = {
+#             "Authorization": "Bearer pk.6fggtzcCYW1gPGgvsWJ22jh5XEGFO2rkn00Ks29aRcwvEof6W1ayXdJW8WDzFF6HgCctwm3vnwVHR8kkdcVwNr2tLXaLgwZATs2FUOXFnhXFfTO8ro6QWkv2QzHmc",
+#             "Content-Type": "application/json"
+#         }
+
+#         response = requests.get(url, headers=headers)
+
+#         if response.status_code != 200:
+#             return Response({"message": "Erreur lors de la vérification de la transaction"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         transaction_data = response.json()
+#         if transaction_data['status'] != 'success':
+#             return Response({"message": "La transaction n'a pas été validée"}, status=status.HTTP_400_BAD_REQUEST)
+
+#         # Calculer le nombre de votes en fonction du montant et de la région
+#         if region == 'cameroon':
+#             price_per_vote = 100  # Prix par vote pour les résidents du Cameroun
+#         else:
+#             price_per_vote = 1000  # Prix par vote pour les étrangers
+
+#         num_votes = int(amount) // price_per_vote
+
+#         # Enregistrer les votes
+#         Vote.objects.create(
+#             candidate_id=candidate_id,
+#             transaction_reference=notchpay_reference,
+#             num_votes=num_votes,
+#             verified=True
+#         )
+
+#         return Response({"message": "La transaction a été confirmée avec succès et les votes ont été enregistrés"}, status=status.HTTP_200_OK)
+
 class VerifyTransaction(APIView):
     def post(self, request):
         notchpay_reference = request.data.get('reference')
@@ -58,10 +102,10 @@ class VerifyTransaction(APIView):
         if not notchpay_reference or not candidate_id or not region or not amount:
             return Response({"message": "La référence de transaction, la région, l'ID du candidat ou le montant est manquant"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Vérifier la transaction avec Notch Pay
+        # Vérifier la transaction avec NotchPay
         url = f"https://api.notchpay.co/payments/verify/{notchpay_reference}"
         headers = {
-            "Authorization": "Bearer pk_test.7drBXP9rbdN1GwBLY6G50jxwPqbKvn2CmWsvS0gbMqQn0VTGu4R3ouDjG6kmRbBD870e5XsCLdMe8xnhdCyFsnoHJem7B2rvDmrVmnOaYyC85j9eJpluAxv76fonR",
+            "Authorization": "Bearer pk.6fggtzcCYW1gPGgvsWJ22jh5XEGFO2rkn00Ks29aRcwvEof6W1ayXdJW8WDzFF6HgCctwm3vnwVHR8kkdcVwNr2tLXaLgwZATs2FUOXFnhXFfTO8ro6QWkv2QzHmc",
             "Content-Type": "application/json"
         }
 
@@ -76,9 +120,9 @@ class VerifyTransaction(APIView):
 
         # Calculer le nombre de votes en fonction du montant et de la région
         if region == 'cameroon':
-            price_per_vote = 100  # Prix par vote pour les résidents du Cameroun
+            price_per_vote = 100
         else:
-            price_per_vote = 1000  # Prix par vote pour les étrangers
+            price_per_vote = 1000
 
         num_votes = int(amount) // price_per_vote
 
@@ -91,7 +135,7 @@ class VerifyTransaction(APIView):
         )
 
         return Response({"message": "La transaction a été confirmée avec succès et les votes ont été enregistrés"}, status=status.HTTP_200_OK)
-
+    
 @api_view(['GET'])
 def votes_chart_data(request):
     candidats = Candidat.objects.annotate(total_votes=Sum('votes__payment_confirmed')).order_by('-total_votes')[:10]
